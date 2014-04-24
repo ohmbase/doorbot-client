@@ -31,11 +31,11 @@
 class ParallaxRFIDClass
 {
   private:
-    SoftwareSerial _RFIDReader;
+    SoftwareSerial _Serial;
   public:
     ParallaxRFIDClass();
     ~ParallaxRFIDClass() {}
-    String read(); //!< Reads an RFID tag
+    String read(unsigned long timeout_ms = 10000); //!< Reads an RFID tag
     void enableRFID(); //!< Enables the RFID reader
     void disableRFID(); //!< Disables the RFID reader
     void begin(); //!< Sets the pin mode of the \\ENABLE pin (ParallaxRFIDClass#setPinEnable) as OUTPUT and disables the RFID reader

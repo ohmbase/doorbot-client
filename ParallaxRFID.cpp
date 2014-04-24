@@ -1,49 +1,45 @@
 #include "ParallaxRFID.h"
 
 ParallaxRFIDClass::ParallaxRFIDClass()
- : _RFIDReader(PX_RFID_PIN_RX, PX_RFID_PIN_TX)
+ : _Serial(PX_RFID_PIN_RX, PX_RFID_PIN_TX)
 {
 }
 
-String ParallaxRFIDClass::read()
+String ParallaxRFIDClass::read(unsigned long timeout_ms)
 {
   int bytesRead = -1;
   char tagByte = '\0';
-  String tagData = "";
+  char tagData[PX_RFID_LENGTH+1];
+  unsigned long timeout_time_ms = timeout_ms + millis();
   
-  // Flush serial buffer before reading the RFID
-  while(_RFIDReader.available() > 0) {
-    _RFIDReader.read();
+  // Zero memory
+  memset(tagData, 0, PX_RFID_LENGTH+1);
+  
+  // Flush serial buffer before enabling the RFID
+  while(_Serial.available() > 0) {
+    _Serial.read();
   }
   
   // Enable the RFID reader
   enableRFID();
   
-  while(bytesRead <= PX_RFID_LENGTH)
+  while(bytesRead < PX_RFID_LENGTH && (timeout_ms == 0 || millis() < timeout_time_ms))
   {
       // Read the byte from the RFID reader
-      tagByte = _RFIDReader.read();
+      tagByte = _Serial.read();
       
-      if (bytesRead >= 0) // (i.e. we're currently populating the tagData)
-      {
-        // Should we stop reading?
-        if(bytesRead >= PX_RFID_LENGTH || tagByte == PX_RFID_START || tagByte == PX_RFID_END)
-        {
-          disableRFID();
-          break; // stop reading
-        }
-        
-        // Append the RFID data
-        // ... we're dropping bytes because of weird bytes >= Arduino 1.0
-        if ((tagByte >= 'A' && tagByte <= 'F') || (tagByte >= '0' && tagByte <= '9')) { 
-          tagData.concat(tagByte);
-          bytesRead++;
-        }
-      }
-      else if(tagByte == PX_RFID_START) // we got the "start" byte of the data
+      if (tagByte == PX_RFID_START) // we got the "start" byte of the data
       {
         bytesRead = 0; // signals that we start reading into tagData[]
       }
+      else if (bytesRead >= 0) // (i.e. we're currently populating the tagData)
+      {
+        // Append the RFID data
+        if ((tagByte >= 'A' && tagByte <= 'F') || (tagByte >= '0' && tagByte <= '9')) { // ... we're selective because of weird bytes >= Arduino 1.0
+          tagData[bytesRead++] = tagByte;
+        }
+      }
+      // TODO check PX_RFID_END?
   }
   
   // Disable RFID (just to be safe)
@@ -51,7 +47,7 @@ String ParallaxRFIDClass::read()
   
   // Return result
   if (bytesRead == PX_RFID_LENGTH)
-    return tagData;
+    return String(tagData);
   else
     return "";
 }
@@ -69,10 +65,10 @@ void ParallaxRFIDClass::disableRFID()
 void ParallaxRFIDClass::begin()
 {
   pinMode(PX_RFID_PIN_RX, INPUT);
-  pinMode(PX_RFID_PIN_TX,OUTPUT);
+  pinMode(PX_RFID_PIN_TX, OUTPUT);
   pinMode(PX_RFID_PIN_ENABLE, OUTPUT);
   
-  _RFIDReader.begin(PX_RFID_BAUD);
+  _Serial.begin(PX_RFID_BAUD);
   
   disableRFID();
 }
