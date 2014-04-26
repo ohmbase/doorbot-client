@@ -1,20 +1,18 @@
 #ifndef DOORBOT_CLIENT_H
 #define DOORBOT_CLIENT_H
 
-#define DOORBOT_TIMEOUT 4000
-#define DOORBOT_KEY_SIZE 32
-#define DOORBOT_DB_STATE_SIZE 64
-#define DOORBOT_BUFFER_SIZE 128 // Larger than any message we expect to receive
-#define DOORBOT_MSG_HMAC_SIZE 64
-
-#define DOORBOT_AUTH_TOKEN_LENGTH  32 // Raw token size in bytes (not hex)
-#define DOORBOT_AUTH_RESPONSE_SIZE  4 // "OKAY" or "FAIL"
-
-
 #include <Arduino.h>
 #include <sha256.h>
 
 #include "BaseClient.h"
+
+#define DOORBOT_TIMEOUT              4000
+#define DOORBOT_KEY_SIZE               32
+#define DOORBOT_DB_STATE_SIZE          64
+#define DOORBOT_BUFFER_SIZE           128
+#define DOORBOT_MSG_HMAC_SIZE          64
+#define DOORBOT_AUTH_TOKEN_LENGTH      32
+#define DOORBOT_AUTH_RESPONSE_LENGTH    2
 
 class DoorbotClient : public BaseClient { 
   private:

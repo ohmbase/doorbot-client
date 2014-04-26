@@ -30,7 +30,7 @@ int DoorbotClient::readFinalField(char* buffer, int max_length) {
 
 boolean DoorbotClient::authenticateRFID(const uint8_t* token_hash) {
   String hmac_msg; hmac_msg.reserve(DOORBOT_MSG_HMAC_SIZE+1);
-  String yes("OKAY");
+  String yes("OK");
   boolean response_valid = true; 
   boolean explicit_yes = false;
   
@@ -43,8 +43,8 @@ boolean DoorbotClient::authenticateRFID(const uint8_t* token_hash) {
   // Get response from server
   Sha256.initHmac(sessionKey().x, DOORBOT_KEY_SIZE); // initialize HMAC
 
-  // .. read response, "OKAY" or "FAIL"
-  readField(_buffer, DOORBOT_AUTH_RESPONSE_SIZE+1, true, true);
+  // .. read response, "OK" or "NO"
+  readField(_buffer, DOORBOT_AUTH_RESPONSE_LENGTH+1, true, true);
   explicit_yes = yes.equalsIgnoreCase(_buffer);
 
   // .. read HMAC

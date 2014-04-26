@@ -1,8 +1,8 @@
-# doorbot 2.0 - Client code
+# _doorbot_ client
 
 ## Overview
 
-_doorbot_ is an access control and usage logging 
+_doorbot_ is an access control system designed to control and report on access to shared spaces.
 
 ## Configuration
 
@@ -44,7 +44,7 @@ _doorbot_ client configuration is found in `config.h'. Yes, it's a C/C++ header 
 
     #endif
 
-## Uploading configuration
+### Uploading configuration
 
 Since the client configuration defines constants used at compile-time, the configuration needs to be compiled with the client software and uploaded to the Arduino.
 
@@ -64,7 +64,7 @@ _doorbot_ has a simple caching system that remembers past authentication events.
 
 ## License
 
-    Copyright (c) 2011-2012, Ohm Base Hackerspace
+    Copyright (c) 2011-2014, Ohm Base Hackerspace
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -94,7 +94,3 @@ _doorbot_ has a simple caching system that remembers past authentication events.
     OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
     OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
     SUCH DAMAGE.
-
-## Authors & Acknowledgements
-* Kris Scott ()
-* Jon Kivinen ()
